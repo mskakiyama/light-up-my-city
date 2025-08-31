@@ -23,43 +23,99 @@ const TrafficMap: React.FC = () => {
   const [trafficLights, setTrafficLights] = useState<TrafficLightData[]>([
     {
       id: '1',
-      intersection: 'Main St & 1st Ave',
+      intersection: 'Market St & Powell St',
       currentState: 'red',
       timeRemaining: 45,
-      position: { x: 25, y: 30 },
-      cycle: { red: 60, yellow: 5, green: 40 }
+      position: { x: 30, y: 65 },
+      cycle: { red: 90, yellow: 6, green: 55 }
     },
     {
       id: '2',
-      intersection: 'Oak St & 2nd Ave',
+      intersection: 'Geary Blvd & Van Ness Ave',
       currentState: 'green',
-      timeRemaining: 25,
-      position: { x: 60, y: 45 },
-      cycle: { red: 50, yellow: 5, green: 35 }
+      timeRemaining: 35,
+      position: { x: 25, y: 35 },
+      cycle: { red: 80, yellow: 5, green: 45 }
     },
     {
       id: '3',
-      intersection: 'Pine St & 3rd Ave',
+      intersection: 'Mission St & 16th St',
       currentState: 'yellow',
-      timeRemaining: 3,
-      position: { x: 40, y: 70 },
-      cycle: { red: 55, yellow: 5, green: 30 }
+      timeRemaining: 4,
+      position: { x: 35, y: 80 },
+      cycle: { red: 75, yellow: 5, green: 50 }
     },
     {
       id: '4',
-      intersection: 'Elm St & Main St',
+      intersection: 'California St & Nob Hill',
       currentState: 'red',
-      timeRemaining: 15,
-      position: { x: 75, y: 25 },
-      cycle: { red: 45, yellow: 4, green: 35 }
+      timeRemaining: 28,
+      position: { x: 40, y: 45 },
+      cycle: { red: 85, yellow: 4, green: 40 }
     },
     {
       id: '5',
-      intersection: 'Cedar Ave & 4th St',
+      intersection: 'Lombard St & Hyde St',
       currentState: 'green',
-      timeRemaining: 30,
-      position: { x: 20, y: 80 },
-      cycle: { red: 50, yellow: 5, green: 40 }
+      timeRemaining: 22,
+      position: { x: 45, y: 30 },
+      cycle: { red: 70, yellow: 5, green: 45 }
+    },
+    {
+      id: '6',
+      intersection: 'Castro St & 18th St',
+      currentState: 'red',
+      timeRemaining: 55,
+      position: { x: 20, y: 70 },
+      cycle: { red: 95, yellow: 6, green: 60 }
+    },
+    {
+      id: '7',
+      intersection: 'Fillmore St & Divisadero St',
+      currentState: 'green',
+      timeRemaining: 18,
+      position: { x: 15, y: 50 },
+      cycle: { red: 65, yellow: 4, green: 35 }
+    },
+    {
+      id: '8',
+      intersection: 'Union St & Polk St',
+      currentState: 'yellow',
+      timeRemaining: 2,
+      position: { x: 50, y: 25 },
+      cycle: { red: 60, yellow: 5, green: 40 }
+    },
+    {
+      id: '9',
+      intersection: 'Valencia St & 24th St',
+      currentState: 'red',
+      timeRemaining: 42,
+      position: { x: 30, y: 85 },
+      cycle: { red: 80, yellow: 5, green: 50 }
+    },
+    {
+      id: '10',
+      intersection: 'Bay St & Embarcadero',
+      currentState: 'green',
+      timeRemaining: 31,
+      position: { x: 65, y: 20 },
+      cycle: { red: 75, yellow: 4, green: 45 }
+    },
+    {
+      id: '11',
+      intersection: 'Irving St & 19th Ave',
+      currentState: 'red',
+      timeRemaining: 67,
+      position: { x: 10, y: 60 },
+      cycle: { red: 100, yellow: 6, green: 65 }
+    },
+    {
+      id: '12',
+      intersection: 'Judah St & Sunset Blvd',
+      currentState: 'green',
+      timeRemaining: 28,
+      position: { x: 8, y: 75 },
+      cycle: { red: 85, yellow: 5, green: 55 }
     }
   ]);
 
