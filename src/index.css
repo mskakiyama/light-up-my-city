@@ -8,56 +8,62 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 220 15% 8%;
-    --foreground: 0 0% 98%;
+    /* Waze-inspired Dark Navigation Theme */
+    --background: 215 25% 12%;
+    --foreground: 210 20% 95%;
 
-    --card: 220 15% 12%;
-    --card-foreground: 0 0% 98%;
+    --card: 215 25% 16%;
+    --card-foreground: 210 20% 95%;
 
-    --popover: 220 15% 12%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 215 25% 16%;
+    --popover-foreground: 210 20% 95%;
 
-    --primary: 120 100% 50%;
-    --primary-foreground: 220 15% 8%;
+    --primary: 195 100% 60%;
+    --primary-foreground: 215 25% 12%;
 
-    --secondary: 220 15% 18%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 215 20% 20%;
+    --secondary-foreground: 210 20% 90%;
 
-    --muted: 220 15% 18%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 215 20% 18%;
+    --muted-foreground: 210 15% 70%;
 
-    --accent: 45 100% 55%;
-    --accent-foreground: 220 15% 8%;
+    --accent: 190 100% 65%;
+    --accent-foreground: 215 25% 12%;
 
-    --destructive: 0 75% 55%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 210 20% 95%;
 
-    --border: 220 15% 20%;
-    --input: 220 15% 20%;
-    --ring: 120 100% 50%;
+    --border: 215 20% 25%;
+    --input: 215 20% 22%;
+    --ring: 195 100% 60%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
-    /* Traffic Light System Colors */
-    --traffic-red: 0 75% 55%;
-    --traffic-yellow: 45 100% 55%;
-    --traffic-green: 120 100% 50%;
-    --traffic-off: 220 15% 25%;
+    /* Waze-style Traffic Colors */
+    --traffic-red: 0 85% 65%;
+    --traffic-yellow: 45 100% 65%;
+    --traffic-green: 140 85% 55%;
+    --traffic-off: 215 15% 35%;
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(120 100% 40%));
-    --gradient-card: linear-gradient(135deg, hsl(var(--card)), hsl(220 15% 15%));
-    --gradient-glow: 0 0 20px hsl(var(--primary) / 0.3);
+    /* Navigation-style Map Colors */
+    --map-background: 215 30% 8%;
+    --map-road: 210 15% 25%;
+    --map-building: 215 20% 18%;
 
-    /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --pulse-duration: 2s;
+    /* Waze-style Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(190 100% 50%));
+    --gradient-card: linear-gradient(135deg, hsl(var(--card)), hsl(215 25% 18%));
+    --gradient-map: linear-gradient(135deg, hsl(var(--map-background)), hsl(215 25% 10%));
+    --gradient-road: linear-gradient(90deg, hsl(var(--map-road)), hsl(210 20% 30%));
 
-    /* Shadows */
-    --shadow-glow: 0 0 20px hsl(var(--primary) / 0.3);
-    --shadow-traffic-red: 0 0 20px hsl(var(--traffic-red) / 0.6);
-    --shadow-traffic-yellow: 0 0 20px hsl(var(--traffic-yellow) / 0.6);
-    --shadow-traffic-green: 0 0 20px hsl(var(--traffic-green) / 0.6);
+    /* Navigation Shadows */
+    --shadow-navigation: 0 4px 20px hsl(215 30% 5% / 0.4);
+    --shadow-card: 0 2px 12px hsl(215 30% 5% / 0.3);
+    --shadow-traffic: 0 0 12px currentColor;
+
+    /* Smooth Transitions */
+    --transition-nav: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-glow: all 0.3s ease-in-out;
   }
   
   .dark {
@@ -115,22 +121,28 @@ All colors MUST be HSL.
     @apply bg-background text-foreground font-sans;
   }
 
-  /* Custom animations */
-  @keyframes pulse-glow {
+  /* Waze-style Navigation Animations */
+  @keyframes navigation-pulse {
     0%, 100% { 
-      box-shadow: 0 0 10px currentColor; 
+      box-shadow: 0 0 8px currentColor; 
+      transform: scale(1);
     }
     50% { 
-      box-shadow: 0 0 20px currentColor, 0 0 30px currentColor; 
+      box-shadow: 0 0 16px currentColor, 0 0 24px currentColor; 
+      transform: scale(1.02);
     }
   }
 
-  .animate-pulse-glow {
-    animation: pulse-glow 2s ease-in-out infinite;
+  @keyframes traffic-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
   }
 
-  /* Traffic light specific animations */
-  .traffic-light-active {
-    animation: pulse-glow var(--pulse-duration) ease-in-out infinite;
+  .waze-pulse {
+    animation: navigation-pulse 1.5s ease-in-out infinite;
+  }
+
+  .traffic-active {
+    animation: traffic-blink 2s ease-in-out infinite;
   }
 }

@@ -58,6 +58,11 @@ export default {
 					green: 'hsl(var(--traffic-green))',
 					off: 'hsl(var(--traffic-off))'
 				},
+				waze: {
+					map: 'hsl(var(--map-background))',
+					road: 'hsl(var(--map-road))',
+					building: 'hsl(var(--map-building))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',

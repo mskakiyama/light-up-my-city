@@ -56,53 +56,45 @@ const TrafficLight: React.FC<TrafficLightProps> = ({
 
   return (
     <div
-      className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+      className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
       style={{ left: `${position.x}%`, top: `${position.y}%` }}
       onClick={onClick}
     >
-      {/* Traffic Light Marker */}
+      {/* Waze-style Compact Traffic Marker */}
       <div className="relative">
-        <div className="bg-card border border-border rounded-lg p-3 min-w-[120px] shadow-lg backdrop-blur-sm">
-          {/* Traffic Light Visual */}
-          <div className="flex justify-center mb-2">
-            <div className="bg-secondary p-2 rounded-lg">
-              <div className="flex flex-col gap-1">
-                <div className={`w-4 h-4 rounded-full transition-all duration-300 ${getLightColor('red')}`} />
-                <div className={`w-4 h-4 rounded-full transition-all duration-300 ${getLightColor('yellow')}`} />
-                <div className={`w-4 h-4 rounded-full transition-all duration-300 ${getLightColor('green')}`} />
+        <div className="bg-card/95 border border-border rounded-2xl px-3 py-2 min-w-[100px] shadow-navigation backdrop-blur-md hover:scale-105 transition-all duration-200">
+          {/* Compact Traffic Light Visual */}
+          <div className="flex justify-center mb-1.5">
+            <div className="bg-secondary/50 p-1.5 rounded-xl">
+              <div className="flex flex-col gap-0.5">
+                <div className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${getLightColor('red')}`} />
+                <div className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${getLightColor('yellow')}`} />
+                <div className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${getLightColor('green')}`} />
               </div>
             </div>
           </div>
 
-          {/* Intersection Name */}
-          <div className="text-xs font-medium text-center mb-1 text-foreground">
-            {intersection}
-          </div>
-
-          {/* Current State */}
-          <Badge 
-            variant={currentState === 'green' ? 'default' : 'secondary'}
-            className={`w-full justify-center text-xs mb-2 ${
-              currentState === 'red' ? 'bg-traffic-red text-white' :
-              currentState === 'yellow' ? 'bg-traffic-yellow text-black' :
-              'bg-traffic-green text-white'
-            }`}
-          >
-            {getStateText()}
-          </Badge>
-
-          {/* Timer */}
-          <div className="flex items-center justify-center gap-1 text-primary">
-            <Clock size={12} />
-            <span className="text-sm font-mono font-bold">
+          {/* Compact Timer Display */}
+          <div className="flex items-center justify-center gap-1 mb-1">
+            <div className={`w-1.5 h-1.5 rounded-full ${
+              currentState === 'red' ? 'bg-traffic-red' :
+              currentState === 'yellow' ? 'bg-traffic-yellow' :
+              'bg-traffic-green'
+            } traffic-active`} />
+            <span className="text-xs font-mono font-bold text-primary">
               {formatTime(displayTime)}
             </span>
           </div>
+
+          {/* Intersection Name */}
+          <div className="text-[10px] font-medium text-center text-muted-foreground truncate">
+            {intersection.split(' & ')[0]}
+          </div>
         </div>
 
-        {/* Location Pin */}
-        <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2">
-          <MapPin size={16} className="text-primary" />
+        {/* Waze-style Location Pin */}
+        <div className="absolute -bottom-0.5 left-1/2 transform -translate-x-1/2">
+          <div className="w-3 h-3 bg-primary rounded-full border-2 border-background shadow-sm" />
         </div>
       </div>
     </div>

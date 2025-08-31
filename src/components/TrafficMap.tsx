@@ -112,37 +112,47 @@ const TrafficMap: React.FC = () => {
 
   return (
     <div className="h-screen bg-background flex">
-      {/* Map Area */}
+      {/* Waze-style Map Area */}
       <div className="flex-1 relative">
-        {/* Map Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-secondary to-muted rounded-lg m-4">
-          {/* Grid Pattern */}
-          <div className="absolute inset-0 opacity-20">
+        {/* Navigation Map Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-waze-map to-background rounded-2xl m-4 overflow-hidden">
+          {/* Road Network Pattern */}
+          <div className="absolute inset-0 opacity-30">
             <div className="absolute inset-0" style={{
               backgroundImage: `
-                linear-gradient(hsl(var(--border)) 1px, transparent 1px),
-                linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px)
+                linear-gradient(hsl(var(--map-road)) 2px, transparent 2px),
+                linear-gradient(90deg, hsl(var(--map-road)) 2px, transparent 2px),
+                linear-gradient(45deg, hsl(var(--map-road)) 1px, transparent 1px)
               `,
-              backgroundSize: '50px 50px'
+              backgroundSize: '80px 80px, 80px 80px, 40px 40px'
             }} />
           </div>
 
-          {/* City Label */}
-          <div className="absolute top-4 left-4">
-            <Badge variant="secondary" className="text-sm">
-              <MapPin size={14} className="mr-1" />
-              Downtown Traffic Monitor
-            </Badge>
-          </div>
+          {/* Waze-style Map Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-waze-map/20 to-transparent" />
 
-          {/* Stats */}
-          <div className="absolute top-4 right-4 flex gap-2">
-            <Badge variant="default" className="bg-traffic-green">
-              {getTotalGreenLights()} Green
-            </Badge>
-            <Badge variant="secondary">
-              Avg Wait: {getAverageWaitTime()}s
-            </Badge>
+          {/* Waze-style Header */}
+          <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
+            <div className="bg-card/90 backdrop-blur-md rounded-full px-4 py-2 shadow-navigation">
+              <div className="flex items-center gap-2 text-sm font-medium">
+                <Navigation size={16} className="text-primary" />
+                <span>Traffic Monitor</span>
+              </div>
+            </div>
+            
+            <div className="flex gap-2">
+              <div className="bg-card/90 backdrop-blur-md rounded-full px-3 py-2 shadow-navigation">
+                <div className="flex items-center gap-2 text-xs">
+                  <div className="w-2 h-2 bg-traffic-green rounded-full waze-pulse" />
+                  <span className="font-medium">{getTotalGreenLights()} Active</span>
+                </div>
+              </div>
+              <div className="bg-card/90 backdrop-blur-md rounded-full px-3 py-2 shadow-navigation">
+                <div className="text-xs font-medium">
+                  {getAverageWaitTime()}s avg
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Traffic Lights */}
@@ -157,84 +167,108 @@ const TrafficMap: React.FC = () => {
             />
           ))}
 
-          {/* Map Controls */}
-          <div className="absolute bottom-4 right-4">
-            <Button size="icon" variant="secondary">
-              <Navigation size={18} />
-            </Button>
+          {/* Waze-style Navigation Controls */}
+          <div className="absolute bottom-4 right-4 flex flex-col gap-2">
+            <div className="bg-card/90 backdrop-blur-md rounded-full p-3 shadow-navigation">
+              <Navigation size={20} className="text-primary" />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Sidebar */}
-      <div className="w-80 bg-card border-l border-border p-4 overflow-y-auto">
+      {/* Waze-style Sidebar */}
+      <div className="w-80 bg-card/95 backdrop-blur-md border-l border-border/50 p-4 overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">Traffic Status</h2>
-          <Button size="icon" variant="ghost">
-            <RefreshCw size={16} />
+          <h2 className="text-lg font-semibold text-primary">Live Traffic</h2>
+          <Button size="icon" variant="ghost" className="rounded-full hover:bg-primary/10">
+            <RefreshCw size={16} className="text-primary" />
           </Button>
         </div>
 
-        {/* Selected Light Details */}
+        {/* Waze-style Selected Light Details */}
         {selectedLightData && (
-          <Card className="p-4 mb-4 bg-gradient-to-br from-card to-secondary border-primary/20">
-            <h3 className="font-medium mb-2">{selectedLightData.intersection}</h3>
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Current:</span>
-                <Badge 
-                  className={
-                    selectedLightData.currentState === 'red' ? 'bg-traffic-red text-white' :
-                    selectedLightData.currentState === 'yellow' ? 'bg-traffic-yellow text-black' :
-                    'bg-traffic-green text-white'
-                  }
-                >
-                  {selectedLightData.currentState.toUpperCase()}
-                </Badge>
+          <Card className="p-4 mb-4 bg-gradient-to-br from-card/90 to-secondary/50 border border-primary/30 rounded-2xl shadow-navigation backdrop-blur-md">
+            <div className="flex items-center gap-2 mb-3">
+              <div className={`w-3 h-3 rounded-full ${
+                selectedLightData.currentState === 'red' ? 'bg-traffic-red' :
+                selectedLightData.currentState === 'yellow' ? 'bg-traffic-yellow' :
+                'bg-traffic-green'
+              } waze-pulse`} />
+              <h3 className="font-semibold text-primary">{selectedLightData.intersection}</h3>
+            </div>
+            
+            <div className="space-y-3">
+              <div className="bg-secondary/30 rounded-xl p-3">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm text-muted-foreground">Status:</span>
+                  <Badge 
+                    className={`rounded-full ${
+                      selectedLightData.currentState === 'red' ? 'bg-traffic-red/20 text-traffic-red border-traffic-red/30' :
+                      selectedLightData.currentState === 'yellow' ? 'bg-traffic-yellow/20 text-traffic-yellow border-traffic-yellow/30' :
+                      'bg-traffic-green/20 text-traffic-green border-traffic-green/30'
+                    }`}
+                  >
+                    {selectedLightData.currentState.toUpperCase()}
+                  </Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">Time left:</span>
+                  <span className="font-mono text-lg font-bold text-primary">
+                    {selectedLightData.timeRemaining}s
+                  </span>
+                </div>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Time Remaining:</span>
-                <span className="font-mono font-bold text-primary">
-                  {selectedLightData.timeRemaining}s
-                </span>
-              </div>
-              <div className="pt-2 border-t border-border">
-                <span className="text-xs text-muted-foreground">Cycle Times:</span>
-                <div className="flex justify-between text-xs mt-1">
-                  <span>Red: {selectedLightData.cycle.red}s</span>
-                  <span>Yellow: {selectedLightData.cycle.yellow}s</span>
-                  <span>Green: {selectedLightData.cycle.green}s</span>
+              
+              <div className="grid grid-cols-3 gap-2 text-xs">
+                <div className="bg-traffic-red/10 rounded-lg p-2 text-center border border-traffic-red/20">
+                  <div className="text-traffic-red font-semibold">{selectedLightData.cycle.red}s</div>
+                  <div className="text-muted-foreground">Red</div>
+                </div>
+                <div className="bg-traffic-yellow/10 rounded-lg p-2 text-center border border-traffic-yellow/20">
+                  <div className="text-traffic-yellow font-semibold">{selectedLightData.cycle.yellow}s</div>
+                  <div className="text-muted-foreground">Yellow</div>
+                </div>
+                <div className="bg-traffic-green/10 rounded-lg p-2 text-center border border-traffic-green/20">
+                  <div className="text-traffic-green font-semibold">{selectedLightData.cycle.green}s</div>
+                  <div className="text-muted-foreground">Green</div>
                 </div>
               </div>
             </div>
           </Card>
         )}
 
-        {/* All Traffic Lights List */}
+        {/* Waze-style Traffic List */}
         <div className="space-y-2">
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">All Intersections</h3>
+          <h3 className="text-sm font-semibold text-muted-foreground mb-3">Live Intersections</h3>
           {trafficLights.map(light => (
             <Card 
               key={light.id}
-              className={`p-3 cursor-pointer transition-all duration-200 hover:bg-secondary/50 ${
-                selectedLight === light.id ? 'ring-2 ring-primary' : ''
+              className={`p-3 cursor-pointer transition-all duration-200 hover:bg-secondary/30 rounded-2xl border-0 bg-secondary/20 backdrop-blur-sm ${
+                selectedLight === light.id ? 'ring-2 ring-primary/50 bg-primary/10' : ''
               }`}
               onClick={() => setSelectedLight(light.id)}
             >
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-sm font-medium">{light.intersection}</span>
-                <Badge 
-                  className={
-                    light.currentState === 'red' ? 'bg-traffic-red text-white' :
-                    light.currentState === 'yellow' ? 'bg-traffic-yellow text-black' :
-                    'bg-traffic-green text-white'
-                  }
-                >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`w-2 h-2 rounded-full ${
+                    light.currentState === 'red' ? 'bg-traffic-red' :
+                    light.currentState === 'yellow' ? 'bg-traffic-yellow' :
+                    'bg-traffic-green'
+                  } traffic-active`} />
+                  <div>
+                    <div className="text-sm font-medium">{light.intersection}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {light.currentState.charAt(0).toUpperCase() + light.currentState.slice(1)} • Next in {light.timeRemaining}s
+                    </div>
+                  </div>
+                </div>
+                <div className={`font-mono text-sm font-bold ${
+                  light.currentState === 'red' ? 'text-traffic-red' :
+                  light.currentState === 'yellow' ? 'text-traffic-yellow' :
+                  'text-traffic-green'
+                }`}>
                   {light.timeRemaining}s
-                </Badge>
-              </div>
-              <div className="text-xs text-muted-foreground">
-                {light.currentState.charAt(0).toUpperCase() + light.currentState.slice(1)} light
+                </div>
               </div>
             </Card>
           ))}
