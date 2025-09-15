@@ -145,4 +145,8 @@ All colors MUST be HSL.
   .traffic-active {
     animation: traffic-blink 2s ease-in-out infinite;
   }
+
+  .shadow-navigation {
+    box-shadow: var(--shadow-navigation);
+  }
 }

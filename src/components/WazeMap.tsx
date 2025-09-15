@@ -97,13 +97,13 @@ const WazeMap: React.FC<WazeMapProps> = ({ onMapLoad, children }) => {
 
   if (!tokenSubmitted) {
     return (
-      <div className="flex flex-col items-center justify-center h-full bg-waze-dark p-8">
-        <div className="bg-waze-card/90 backdrop-blur-md border border-waze-border rounded-3xl p-8 max-w-md w-full">
+      <div className="flex flex-col items-center justify-center h-full bg-background p-8">
+        <div className="bg-card/90 backdrop-blur-md border border-border rounded-3xl p-8 max-w-md w-full shadow-navigation">
           <div className="flex items-center gap-3 mb-6">
-            <MapPin className="w-8 h-8 text-waze-accent" />
+            <MapPin className="w-8 h-8 text-accent" />
             <div>
-              <h2 className="text-xl font-bold text-waze-text">Connect Mapbox</h2>
-              <p className="text-sm text-waze-text-muted">Add your Mapbox token to see real streets</p>
+              <h2 className="text-xl font-bold text-foreground">Connect Mapbox</h2>
+              <p className="text-sm text-muted-foreground">Add your Mapbox token to see real streets</p>
             </div>
           </div>
           
@@ -113,22 +113,22 @@ const WazeMap: React.FC<WazeMapProps> = ({ onMapLoad, children }) => {
               placeholder="Enter your Mapbox public token"
               value={mapboxToken}
               onChange={(e) => setMapboxToken(e.target.value)}
-              className="bg-waze-input border-waze-border text-waze-text"
+              className="bg-input border-border text-foreground"
             />
             <Button 
               onClick={handleTokenSubmit}
-              className="w-full bg-waze-accent hover:bg-waze-accent/90 text-white font-medium"
+              className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-medium"
               disabled={!mapboxToken.trim()}
             >
               Load Map
             </Button>
-            <p className="text-xs text-waze-text-muted text-center">
+            <p className="text-xs text-muted-foreground text-center">
               Get your token at{' '}
               <a 
                 href="https://mapbox.com/" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-waze-accent hover:underline"
+                className="text-accent hover:underline"
               >
                 mapbox.com
               </a>
