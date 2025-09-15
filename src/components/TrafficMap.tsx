@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import TrafficLight from './TrafficLight';
+import WazeMap from './WazeMap';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, Navigation, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import mapboxgl from 'mapbox-gl';
 
 interface TrafficLightData {
   id: string;
@@ -19,14 +21,15 @@ interface TrafficLightData {
 }
 
 const TrafficMap: React.FC = () => {
-  const [selectedLight, setSelectedLight] = useState<string | null>(null);
+  const [selectedLight, setSelectedLight] = useState<TrafficLightData | null>(null);
+  const [map, setMap] = useState<mapboxgl.Map | null>(null);
   const [trafficLights, setTrafficLights] = useState<TrafficLightData[]>([
     {
       id: '1',
       intersection: 'Market St & Powell St',
       currentState: 'red',
       timeRemaining: 45,
-      position: { x: 30, y: 65 },
+      position: { x: -122.4083, y: 37.7849 }, // Real coordinates
       cycle: { red: 90, yellow: 6, green: 55 }
     },
     {
@@ -34,7 +37,7 @@ const TrafficMap: React.FC = () => {
       intersection: 'Geary Blvd & Van Ness Ave',
       currentState: 'green',
       timeRemaining: 35,
-      position: { x: 25, y: 35 },
+      position: { x: -122.4194, y: 37.7849 },
       cycle: { red: 80, yellow: 5, green: 45 }
     },
     {
@@ -42,7 +45,7 @@ const TrafficMap: React.FC = () => {
       intersection: 'Mission St & 16th St',
       currentState: 'yellow',
       timeRemaining: 4,
-      position: { x: 35, y: 80 },
+      position: { x: -122.4194, y: 37.7649 },
       cycle: { red: 75, yellow: 5, green: 50 }
     },
     {
@@ -50,7 +53,7 @@ const TrafficMap: React.FC = () => {
       intersection: 'California St & Nob Hill',
       currentState: 'red',
       timeRemaining: 28,
-      position: { x: 40, y: 45 },
+      position: { x: -122.4114, y: 37.7919 },
       cycle: { red: 85, yellow: 4, green: 40 }
     },
     {
@@ -58,7 +61,7 @@ const TrafficMap: React.FC = () => {
       intersection: 'Lombard St & Hyde St',
       currentState: 'green',
       timeRemaining: 22,
-      position: { x: 45, y: 30 },
+      position: { x: -122.4194, y: 37.8019 },
       cycle: { red: 70, yellow: 5, green: 45 }
     },
     {
@@ -66,7 +69,7 @@ const TrafficMap: React.FC = () => {
       intersection: 'Castro St & 18th St',
       currentState: 'red',
       timeRemaining: 55,
-      position: { x: 20, y: 70 },
+      position: { x: -122.4349, y: 37.7609 },
       cycle: { red: 95, yellow: 6, green: 60 }
     },
     {
@@ -74,7 +77,7 @@ const TrafficMap: React.FC = () => {
       intersection: 'Fillmore St & Divisadero St',
       currentState: 'green',
       timeRemaining: 18,
-      position: { x: 15, y: 50 },
+      position: { x: -122.4333, y: 37.7849 },
       cycle: { red: 65, yellow: 4, green: 35 }
     },
     {
@@ -82,7 +85,7 @@ const TrafficMap: React.FC = () => {
       intersection: 'Union St & Polk St',
       currentState: 'yellow',
       timeRemaining: 2,
-      position: { x: 50, y: 25 },
+      position: { x: -122.4194, y: 37.7989 },
       cycle: { red: 60, yellow: 5, green: 40 }
     },
     {
@@ -90,7 +93,7 @@ const TrafficMap: React.FC = () => {
       intersection: 'Valencia St & 24th St',
       currentState: 'red',
       timeRemaining: 42,
-      position: { x: 30, y: 85 },
+      position: { x: -122.4214, y: 37.7529 },
       cycle: { red: 80, yellow: 5, green: 50 }
     },
     {
@@ -98,7 +101,7 @@ const TrafficMap: React.FC = () => {
       intersection: 'Bay St & Embarcadero',
       currentState: 'green',
       timeRemaining: 31,
-      position: { x: 65, y: 20 },
+      position: { x: -122.3994, y: 37.8059 },
       cycle: { red: 75, yellow: 4, green: 45 }
     },
     {
@@ -106,7 +109,7 @@ const TrafficMap: React.FC = () => {
       intersection: 'Irving St & 19th Ave',
       currentState: 'red',
       timeRemaining: 67,
-      position: { x: 10, y: 60 },
+      position: { x: -122.4750, y: 37.7639 },
       cycle: { red: 100, yellow: 6, green: 65 }
     },
     {
@@ -114,7 +117,7 @@ const TrafficMap: React.FC = () => {
       intersection: 'Judah St & Sunset Blvd',
       currentState: 'green',
       timeRemaining: 28,
-      position: { x: 8, y: 75 },
+      position: { x: -122.4794, y: 37.7609 },
       cycle: { red: 85, yellow: 5, green: 55 }
     }
   ]);
@@ -153,8 +156,6 @@ const TrafficMap: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const selectedLightData = trafficLights.find(light => light.id === selectedLight);
-
   const getTotalGreenLights = () => {
     return trafficLights.filter(light => light.currentState === 'green').length;
   };
@@ -166,29 +167,27 @@ const TrafficMap: React.FC = () => {
     return Math.round(totalWait / redLights.length);
   };
 
+  const convertToMapPosition = (lng: number, lat: number) => {
+    if (!map) return { x: 50, y: 50 };
+    
+    const point = map.project([lng, lat]);
+    const container = map.getContainer();
+    const rect = container.getBoundingClientRect();
+    
+    return {
+      x: (point.x / rect.width) * 100,
+      y: (point.y / rect.height) * 100
+    };
+  };
+
   return (
     <div className="h-screen bg-background flex">
       {/* Waze-style Map Area */}
-      <div className="flex-1 relative">
-        {/* Navigation Map Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-waze-map to-background rounded-2xl m-4 overflow-hidden">
-          {/* Road Network Pattern */}
-          <div className="absolute inset-0 opacity-30">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `
-                linear-gradient(hsl(var(--map-road)) 2px, transparent 2px),
-                linear-gradient(90deg, hsl(var(--map-road)) 2px, transparent 2px),
-                linear-gradient(45deg, hsl(var(--map-road)) 1px, transparent 1px)
-              `,
-              backgroundSize: '80px 80px, 80px 80px, 40px 40px'
-            }} />
-          </div>
-
-          {/* Waze-style Map Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-waze-map/20 to-transparent" />
+      <div className="flex-1 relative m-4 rounded-2xl overflow-hidden">
+        <WazeMap onMapLoad={setMap}>
 
           {/* Waze-style Header */}
-          <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
+          <div className="absolute top-4 left-4 right-4 flex justify-between items-center pointer-events-auto z-10">
             <div className="bg-card/90 backdrop-blur-md rounded-full px-4 py-2 shadow-navigation">
               <div className="flex items-center gap-2 text-sm font-medium">
                 <Navigation size={16} className="text-primary" />
@@ -212,24 +211,27 @@ const TrafficMap: React.FC = () => {
           </div>
 
           {/* Traffic Lights */}
-          {trafficLights.map(light => (
-            <TrafficLight
-              key={light.id}
-              intersection={light.intersection}
-              currentState={light.currentState}
-              timeRemaining={light.timeRemaining}
-              position={light.position}
-              onClick={() => setSelectedLight(light.id)}
-            />
-          ))}
+          {map && trafficLights.map((light) => {
+            const mapPosition = convertToMapPosition(light.position.x, light.position.y);
+            return (
+              <TrafficLight
+                key={light.id}
+                intersection={light.intersection}
+                currentState={light.currentState}
+                timeRemaining={light.timeRemaining}
+                position={mapPosition}
+                onClick={() => setSelectedLight(light)}
+              />
+            );
+          })}
 
           {/* Waze-style Navigation Controls */}
-          <div className="absolute bottom-4 right-4 flex flex-col gap-2">
+          <div className="absolute bottom-4 right-4 flex flex-col gap-2 pointer-events-auto z-10">
             <div className="bg-card/90 backdrop-blur-md rounded-full p-3 shadow-navigation">
               <Navigation size={20} className="text-primary" />
             </div>
           </div>
-        </div>
+        </WazeMap>
       </div>
 
       {/* Waze-style Sidebar */}
@@ -242,15 +244,15 @@ const TrafficMap: React.FC = () => {
         </div>
 
         {/* Waze-style Selected Light Details */}
-        {selectedLightData && (
+        {selectedLight && (
           <Card className="p-4 mb-4 bg-gradient-to-br from-card/90 to-secondary/50 border border-primary/30 rounded-2xl shadow-navigation backdrop-blur-md">
             <div className="flex items-center gap-2 mb-3">
               <div className={`w-3 h-3 rounded-full ${
-                selectedLightData.currentState === 'red' ? 'bg-traffic-red' :
-                selectedLightData.currentState === 'yellow' ? 'bg-traffic-yellow' :
+                selectedLight.currentState === 'red' ? 'bg-traffic-red' :
+                selectedLight.currentState === 'yellow' ? 'bg-traffic-yellow' :
                 'bg-traffic-green'
               } waze-pulse`} />
-              <h3 className="font-semibold text-primary">{selectedLightData.intersection}</h3>
+              <h3 className="font-semibold text-primary">{selectedLight.intersection}</h3>
             </div>
             
             <div className="space-y-3">
@@ -259,33 +261,33 @@ const TrafficMap: React.FC = () => {
                   <span className="text-sm text-muted-foreground">Status:</span>
                   <Badge 
                     className={`rounded-full ${
-                      selectedLightData.currentState === 'red' ? 'bg-traffic-red/20 text-traffic-red border-traffic-red/30' :
-                      selectedLightData.currentState === 'yellow' ? 'bg-traffic-yellow/20 text-traffic-yellow border-traffic-yellow/30' :
+                      selectedLight.currentState === 'red' ? 'bg-traffic-red/20 text-traffic-red border-traffic-red/30' :
+                      selectedLight.currentState === 'yellow' ? 'bg-traffic-yellow/20 text-traffic-yellow border-traffic-yellow/30' :
                       'bg-traffic-green/20 text-traffic-green border-traffic-green/30'
                     }`}
                   >
-                    {selectedLightData.currentState.toUpperCase()}
+                    {selectedLight.currentState.toUpperCase()}
                   </Badge>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Time left:</span>
                   <span className="font-mono text-lg font-bold text-primary">
-                    {selectedLightData.timeRemaining}s
+                    {selectedLight.timeRemaining}s
                   </span>
                 </div>
               </div>
               
               <div className="grid grid-cols-3 gap-2 text-xs">
                 <div className="bg-traffic-red/10 rounded-lg p-2 text-center border border-traffic-red/20">
-                  <div className="text-traffic-red font-semibold">{selectedLightData.cycle.red}s</div>
+                  <div className="text-traffic-red font-semibold">{selectedLight.cycle.red}s</div>
                   <div className="text-muted-foreground">Red</div>
                 </div>
                 <div className="bg-traffic-yellow/10 rounded-lg p-2 text-center border border-traffic-yellow/20">
-                  <div className="text-traffic-yellow font-semibold">{selectedLightData.cycle.yellow}s</div>
+                  <div className="text-traffic-yellow font-semibold">{selectedLight.cycle.yellow}s</div>
                   <div className="text-muted-foreground">Yellow</div>
                 </div>
                 <div className="bg-traffic-green/10 rounded-lg p-2 text-center border border-traffic-green/20">
-                  <div className="text-traffic-green font-semibold">{selectedLightData.cycle.green}s</div>
+                  <div className="text-traffic-green font-semibold">{selectedLight.cycle.green}s</div>
                   <div className="text-muted-foreground">Green</div>
                 </div>
               </div>
@@ -300,9 +302,9 @@ const TrafficMap: React.FC = () => {
             <Card 
               key={light.id}
               className={`p-3 cursor-pointer transition-all duration-200 hover:bg-secondary/30 rounded-2xl border-0 bg-secondary/20 backdrop-blur-sm ${
-                selectedLight === light.id ? 'ring-2 ring-primary/50 bg-primary/10' : ''
+                selectedLight?.id === light.id ? 'ring-2 ring-primary/50 bg-primary/10' : ''
               }`}
-              onClick={() => setSelectedLight(light.id)}
+              onClick={() => setSelectedLight(light)}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
