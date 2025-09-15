@@ -140,8 +140,8 @@ const WazeMap: React.FC<WazeMapProps> = ({ onMapLoad, children }) => {
   }
 
   return (
-    <div className="relative w-full h-full">
-      <div ref={mapContainer} className="absolute inset-0" />
+    <div className="relative w-full h-full min-h-screen">
+      <div ref={mapContainer} className="absolute inset-0 w-full h-full" style={{ minHeight: '100vh' }} />
       {mapReady && (
         <div className="absolute inset-0 pointer-events-none">
           {children}
