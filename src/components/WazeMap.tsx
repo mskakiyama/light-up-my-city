@@ -5,14 +5,30 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { MapPin } from 'lucide-react';
 
+interface TrafficLightData {
+  id: string;
+  intersection: string;
+  currentState: 'red' | 'yellow' | 'green';
+  timeRemaining: number;
+  position: { x: number; y: number };
+  cycle: {
+    red: number;
+    yellow: number;
+    green: number;
+  };
+}
+
 interface WazeMapProps {
   onMapLoad?: (map: mapboxgl.Map) => void;
   children?: React.ReactNode;
+  trafficLights?: TrafficLightData[];
+  onTrafficLightClick?: (light: TrafficLightData) => void;
 }
 
-const WazeMap: React.FC<WazeMapProps> = ({ onMapLoad, children }) => {
+const WazeMap: React.FC<WazeMapProps> = ({ onMapLoad, children, trafficLights = [], onTrafficLightClick }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
+  const markersRef = useRef<mapboxgl.Marker[]>([]);
   const [mapboxToken, setMapboxToken] = useState('');
   const [tokenSubmitted, setTokenSubmitted] = useState(false);
   const [mapReady, setMapReady] = useState(false);
@@ -89,8 +105,82 @@ const WazeMap: React.FC<WazeMapProps> = ({ onMapLoad, children }) => {
     map.current.touchZoomRotate.disableRotation();
   };
 
+  // Create marker element for traffic lights
+  const createTrafficMarker = (light: TrafficLightData) => {
+    const el = document.createElement('div');
+    el.className = 'traffic-marker';
+    el.style.cssText = `
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid ${
+        light.currentState === 'red' ? 'hsl(var(--traffic-red))' :
+        light.currentState === 'yellow' ? 'hsl(var(--traffic-yellow))' :
+        'hsl(var(--traffic-green))'
+      };
+      box-shadow: 0 0 20px ${
+        light.currentState === 'red' ? 'hsl(var(--traffic-red) / 0.3)' :
+        light.currentState === 'yellow' ? 'hsl(var(--traffic-yellow) / 0.3)' :
+        'hsl(var(--traffic-green) / 0.3)'
+      };
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    `;
+    
+    el.innerHTML = `
+      <div style="
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: ${
+          light.currentState === 'red' ? 'hsl(var(--traffic-red))' :
+          light.currentState === 'yellow' ? 'hsl(var(--traffic-yellow))' :
+          'hsl(var(--traffic-green))'
+        };
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 10px;
+        font-weight: bold;
+        font-family: monospace;
+      ">${light.timeRemaining}</div>
+    `;
+
+    el.addEventListener('click', () => {
+      onTrafficLightClick?.(light);
+    });
+
+    return el;
+  };
+
+  // Update traffic light markers
+  useEffect(() => {
+    if (!map.current || !mapReady) return;
+
+    // Remove existing markers
+    markersRef.current.forEach(marker => marker.remove());
+    markersRef.current = [];
+
+    // Add new markers for each traffic light
+    trafficLights.forEach(light => {
+      const markerEl = createTrafficMarker(light);
+      const marker = new mapboxgl.Marker(markerEl)
+        .setLngLat([light.position.x, light.position.y])
+        .addTo(map.current!);
+      
+      markersRef.current.push(marker);
+    });
+  }, [trafficLights, mapReady, onTrafficLightClick]);
+
   useEffect(() => {
     return () => {
+      markersRef.current.forEach(marker => marker.remove());
       map.current?.remove();
     };
   }, []);

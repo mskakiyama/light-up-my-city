@@ -184,54 +184,11 @@ const TrafficMap: React.FC = () => {
     <div className="h-screen bg-background flex">
       {/* Waze-style Map Area */}
       <div className="flex-1 relative m-4 rounded-2xl overflow-hidden">
-        <WazeMap onMapLoad={setMap}>
-
-          {/* Waze-style Header */}
-          <div className="absolute top-4 left-4 right-4 flex justify-between items-center pointer-events-auto z-10">
-            <div className="bg-card/90 backdrop-blur-md rounded-full px-4 py-2 shadow-navigation">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <Navigation size={16} className="text-primary" />
-                <span>Traffic Monitor</span>
-              </div>
-            </div>
-            
-            <div className="flex gap-2">
-              <div className="bg-card/90 backdrop-blur-md rounded-full px-3 py-2 shadow-navigation">
-                <div className="flex items-center gap-2 text-xs">
-                  <div className="w-2 h-2 bg-traffic-green rounded-full waze-pulse" />
-                  <span className="font-medium">{getTotalGreenLights()} Active</span>
-                </div>
-              </div>
-              <div className="bg-card/90 backdrop-blur-md rounded-full px-3 py-2 shadow-navigation">
-                <div className="text-xs font-medium">
-                  {getAverageWaitTime()}s avg
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Traffic Lights */}
-          {map && trafficLights.map((light) => {
-            const mapPosition = convertToMapPosition(light.position.x, light.position.y);
-            return (
-              <TrafficLight
-                key={light.id}
-                intersection={light.intersection}
-                currentState={light.currentState}
-                timeRemaining={light.timeRemaining}
-                position={mapPosition}
-                onClick={() => setSelectedLight(light)}
-              />
-            );
-          })}
-
-          {/* Waze-style Navigation Controls */}
-          <div className="absolute bottom-4 right-4 flex flex-col gap-2 pointer-events-auto z-10">
-            <div className="bg-card/90 backdrop-blur-md rounded-full p-3 shadow-navigation">
-              <Navigation size={20} className="text-primary" />
-            </div>
-          </div>
-        </WazeMap>
+        <WazeMap 
+          onMapLoad={setMap}
+          trafficLights={trafficLights}
+          onTrafficLightClick={setSelectedLight}
+        />
       </div>
 
       {/* Waze-style Sidebar */}
