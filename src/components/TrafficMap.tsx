@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, Navigation, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import mapboxgl from 'mapbox-gl';
+import L from 'leaflet';
 
 interface TrafficLightData {
   id: string;
@@ -22,7 +22,7 @@ interface TrafficLightData {
 
 const TrafficMap: React.FC = () => {
   const [selectedLight, setSelectedLight] = useState<TrafficLightData | null>(null);
-  const [map, setMap] = useState<mapboxgl.Map | null>(null);
+  const [map, setMap] = useState<L.Map | null>(null);
   const [trafficLights, setTrafficLights] = useState<TrafficLightData[]>([
     {
       id: '1',
@@ -170,7 +170,7 @@ const TrafficMap: React.FC = () => {
   const convertToMapPosition = (lng: number, lat: number) => {
     if (!map) return { x: 50, y: 50 };
     
-    const point = map.project([lng, lat]);
+    const point = map.latLngToContainerPoint([lat, lng]);
     const container = map.getContainer();
     const rect = container.getBoundingClientRect();
     
