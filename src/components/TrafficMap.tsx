@@ -3,7 +3,7 @@ import TrafficLight from './TrafficLight';
 import WazeMap from './WazeMap';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Navigation, RefreshCw, Map, X } from 'lucide-react';
+import { MapPin, Navigation, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import L from 'leaflet';
 
@@ -23,7 +23,6 @@ interface TrafficLightData {
 const TrafficMap: React.FC = () => {
   const [selectedLight, setSelectedLight] = useState<TrafficLightData | null>(null);
   const [map, setMap] = useState<L.Map | null>(null);
-  const [isMapOpen, setIsMapOpen] = useState(true);
   const [trafficLights, setTrafficLights] = useState<TrafficLightData[]>([
     {
       id: '1',
@@ -182,55 +181,18 @@ const TrafficMap: React.FC = () => {
   };
 
   return (
-    <div className="h-screen bg-background flex flex-col lg:flex-row">
-      {/* Map Toggle Button - Mobile */}
-      <div className="lg:hidden p-4 bg-card border-b border-border/50">
-        <Button 
-          onClick={() => setIsMapOpen(!isMapOpen)}
-          variant="outline"
-          className="w-full flex items-center justify-center gap-2"
-        >
-          {isMapOpen ? <X size={16} /> : <Map size={16} />}
-          {isMapOpen ? 'Hide Map' : 'Show Map'}
-        </Button>
+    <div className="h-screen bg-background flex">
+      {/* Waze-style Map Area */}
+      <div className="flex-1 relative m-4 rounded-2xl overflow-hidden">
+        <WazeMap 
+          onMapLoad={setMap}
+          trafficLights={trafficLights}
+          onTrafficLightClick={setSelectedLight}
+        />
       </div>
 
-      {/* Waze-style Map Area */}
-      {isMapOpen && (
-        <div className="flex-1 relative m-4 rounded-2xl overflow-hidden order-1 lg:order-none h-1/2 lg:h-auto">
-          <WazeMap 
-            onMapLoad={setMap}
-            trafficLights={trafficLights}
-            onTrafficLightClick={setSelectedLight}
-          />
-          {/* Desktop Map Toggle Button */}
-          <Button 
-            onClick={() => setIsMapOpen(false)}
-            variant="outline"
-            size="icon"
-            className="absolute top-4 right-4 hidden lg:flex bg-background/90 backdrop-blur-sm hover:bg-background"
-          >
-            <X size={16} />
-          </Button>
-        </div>
-      )}
-
-      {/* Show Map Button - Desktop when hidden */}
-      {!isMapOpen && (
-        <div className="hidden lg:flex items-center justify-center p-4 bg-secondary/20 m-4 rounded-2xl border-2 border-dashed border-border/50">
-          <Button 
-            onClick={() => setIsMapOpen(true)}
-            variant="outline"
-            className="flex items-center gap-2"
-          >
-            <Map size={16} />
-            Show Map
-          </Button>
-        </div>
-      )}
-
       {/* Waze-style Sidebar */}
-      <div className="w-full lg:w-80 bg-card/95 backdrop-blur-md border-t lg:border-t-0 lg:border-l border-border/50 p-4 overflow-y-auto order-2 lg:order-none flex-1 lg:flex-none">
+      <div className="w-80 bg-card/95 backdrop-blur-md border-l border-border/50 p-4 overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-primary">Live Traffic</h2>
           <Button size="icon" variant="ghost" className="rounded-full hover:bg-primary/10">
