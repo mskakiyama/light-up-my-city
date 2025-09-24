@@ -1,8 +1,17 @@
 import TrafficMap from '@/components/TrafficMap';
+import { ShinyButton } from '@/components/ui/shiny-button';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
+  const navigate = useNavigate();
+
   return (
-    <main className="h-screen">
+    <main className="h-screen relative">
+      <div className="absolute top-4 left-4 z-10">
+        <ShinyButton onClick={() => navigate('/')}>
+          Back
+        </ShinyButton>
+      </div>
       <TrafficMap />
     </main>
   );
