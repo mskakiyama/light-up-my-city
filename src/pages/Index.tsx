@@ -8,7 +8,7 @@ const Index = () => {
   return (
     <main className="h-screen relative">
       <div className="absolute top-4 left-4 z-10">
-        <ShinyButton onClick={() => navigate('/')}>
+        <ShinyButton onClick={() => navigate('/')} className="[&_span]:!text-[#4C4F55]">
           Back
         </ShinyButton>
       </div>
