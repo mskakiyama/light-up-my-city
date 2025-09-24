@@ -112,7 +112,7 @@ export function BackgroundPaths() {
                             hover:shadow-md"
                         >
                             <span className="opacity-90 group-hover:opacity-100 transition-opacity">
-                                Enter Traffic App
+                                Enter here
                             </span>
                             <span
                                 className="ml-3 opacity-70 group-hover:opacity-100 group-hover:translate-x-1.5 
