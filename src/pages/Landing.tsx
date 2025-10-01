@@ -148,10 +148,10 @@ const Landing = () => {
         >
           <div className="relative">
             {/* Enhanced glassmorphic overlay with stronger shine */}
-            <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-white/5 to-transparent rounded-lg pointer-events-none" />
-            <div className="absolute inset-0 bg-gradient-to-tl from-primary/5 via-transparent to-transparent rounded-lg pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-white/15 via-white/3 to-transparent rounded-lg pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-tl from-primary/3 via-transparent to-transparent rounded-lg pointer-events-none" />
             
-            <Card className="backdrop-blur-3xl bg-background/10 border border-white/30 shadow-[0_8px_32px_0_rgba(0,0,0,0.5),0_0_1px_0_rgba(255,255,255,0.3)_inset] relative overflow-hidden">
+            <Card className="backdrop-blur-3xl bg-background/5 border border-white/25 shadow-[0_8px_32px_0_rgba(0,0,0,0.5),0_0_1px_0_rgba(255,255,255,0.2)_inset] relative overflow-hidden">
               <CardHeader className="space-y-1 text-center relative z-10">
               <CardTitle className="text-3xl font-bold tracking-tight">
                 Light up my city
@@ -172,7 +172,7 @@ const Landing = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     disabled={loading}
-                    className="backdrop-blur-sm bg-background/20 border-white/20"
+                    className="backdrop-blur-sm bg-background/10 border-white/20"
                   />
                 </div>
                 <div className="space-y-2">
@@ -186,7 +186,7 @@ const Landing = () => {
                     required
                     disabled={loading}
                     minLength={6}
-                    className="backdrop-blur-sm bg-background/20 border-white/20"
+                    className="backdrop-blur-sm bg-background/10 border-white/20"
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
@@ -199,13 +199,13 @@ const Landing = () => {
                   <span className="w-full border-t border-border" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background/30 backdrop-blur-sm px-2 text-muted-foreground">Or</span>
+                  <span className="bg-background/20 backdrop-blur-sm px-2 text-muted-foreground">Or</span>
                 </div>
               </div>
 
                 <Button
                   variant="outline"
-                  className="w-full backdrop-blur-sm bg-background/20 border-white/20 hover:bg-background/30"
+                  className="w-full backdrop-blur-sm bg-background/10 border-white/20 hover:bg-background/20"
                   onClick={handleSkip}
                   disabled={loading}
                 >
