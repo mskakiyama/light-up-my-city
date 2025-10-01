@@ -8,7 +8,7 @@ const Index = () => {
 
   return (
     <main className="h-screen relative">
-      <div className="absolute z-10" style={{ top: '15px', left: '15px' }}>
+      <div className="absolute z-10" style={{ top: '40px', left: '40px' }}>
         <ShinyButton 
           onClick={() => navigate('/')} 
           className="!rounded-full !w-12 !h-12 !p-0 [&_span]:!text-[#8A8D95] [&_span]:flex [&_span]:items-center [&_span]:justify-center"
