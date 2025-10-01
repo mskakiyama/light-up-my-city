@@ -146,7 +146,7 @@ const Landing = () => {
           transition={{ duration: 0.5 }}
           className="max-w-md mx-auto"
         >
-          <Card className="backdrop-blur-xl bg-card/95 border-border/50 shadow-2xl">
+          <Card className="backdrop-blur-2xl bg-card/30 border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none">
             <CardHeader className="space-y-1 text-center">
               <CardTitle className="text-3xl font-bold tracking-tight">
                 Light up my city
