@@ -146,16 +146,20 @@ const Landing = () => {
           transition={{ duration: 0.5 }}
           className="max-w-md mx-auto"
         >
-          <Card className="backdrop-blur-2xl bg-card/30 border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none">
-            <CardHeader className="space-y-1 text-center">
+          <div className="relative">
+            {/* Glassmorphic overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-lg pointer-events-none" />
+            
+            <Card className="backdrop-blur-2xl bg-card/20 border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] relative overflow-hidden">
+              <CardHeader className="space-y-1 text-center relative z-10">
               <CardTitle className="text-3xl font-bold tracking-tight">
                 Light up my city
               </CardTitle>
               <CardDescription>
                 {isSignUp ? "Create an account to get started" : "Sign in to your account"}
               </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
+              </CardHeader>
+              <CardContent className="space-y-4 relative z-10">
               <form onSubmit={handleAuth} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
@@ -217,8 +221,9 @@ const Landing = () => {
                     : "Don't have an account? Create one"}
                 </button>
               </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </motion.div>
       </div>
     </div>
