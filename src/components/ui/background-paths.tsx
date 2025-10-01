@@ -5,18 +5,42 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
 function FloatingPaths({ position }: { position: number }) {
-    const paths = Array.from({ length: 36 }, (_, i) => ({
-        id: i,
-        d: `M-${380 - i * 5 * position} -${189 + i * 6}C-${
-            380 - i * 5 * position
-        } -${189 + i * 6} -${312 - i * 5 * position} ${216 - i * 6} ${
-            152 - i * 5 * position
-        } ${343 - i * 6}C${616 - i * 5 * position} ${470 - i * 6} ${
-            684 - i * 5 * position
-        } ${875 - i * 6} ${684 - i * 5 * position} ${875 - i * 6}`,
-        color: `rgba(15,23,42,${0.1 + i * 0.03})`,
-        width: 0.5 + i * 0.03,
-    }));
+    // Traffic light colors for realistic traffic flow simulation
+    const trafficColors = [
+        { color: '#16A34A', weight: 0.5, speed: 1.2, name: 'green' },    // Green - flowing traffic (50%)
+        { color: '#F59E0B', weight: 0.3, speed: 1.0, name: 'amber' },    // Amber - medium traffic (30%)
+        { color: '#DC2626', weight: 0.2, speed: 0.7, name: 'red' },      // Red - slow/stopped traffic (20%)
+    ];
+
+    // Weighted random color selection
+    const getRandomTrafficColor = () => {
+        const rand = Math.random();
+        let cumulative = 0;
+        for (const tc of trafficColors) {
+            cumulative += tc.weight;
+            if (rand <= cumulative) return tc;
+        }
+        return trafficColors[0];
+    };
+
+    const paths = Array.from({ length: 36 }, (_, i) => {
+        const trafficColor = getRandomTrafficColor();
+        return {
+            id: i,
+            d: `M-${380 - i * 5 * position} -${189 + i * 6}C-${
+                380 - i * 5 * position
+            } -${189 + i * 6} -${312 - i * 5 * position} ${216 - i * 6} ${
+                152 - i * 5 * position
+            } ${343 - i * 6}C${616 - i * 5 * position} ${470 - i * 6} ${
+                684 - i * 5 * position
+            } ${875 - i * 6} ${684 - i * 5 * position} ${875 - i * 6}`,
+            color: trafficColor.color,
+            width: 0.5 + i * 0.03 + Math.random() * 0.2,
+            speed: trafficColor.speed,
+            delay: Math.random() * 10,
+            isPulsing: trafficColor.name === 'red',
+        };
+    });
 
     return (
         <div className="absolute inset-0 pointer-events-none">
@@ -30,19 +54,22 @@ function FloatingPaths({ position }: { position: number }) {
                     <motion.path
                         key={path.id}
                         d={path.d}
-                        stroke="#4C4F55"
+                        stroke={path.color}
                         strokeWidth={path.width}
-                        strokeOpacity={0.1 + path.id * 0.03}
-                        initial={{ pathLength: 0.3, opacity: 0.6 }}
+                        strokeOpacity={0.4 + Math.random() * 0.3}
+                        initial={{ pathLength: 0.3, opacity: 0.4 }}
                         animate={{
                             pathLength: 1,
-                            opacity: [0.3, 0.6, 0.3],
+                            opacity: path.isPulsing 
+                                ? [0.3, 0.7, 0.3] 
+                                : [0.4, 0.7, 0.4],
                             pathOffset: [0, 1, 0],
                         }}
                         transition={{
-                            duration: 20 + Math.random() * 10,
+                            duration: (20 + Math.random() * 10) / path.speed,
                             repeat: Number.POSITIVE_INFINITY,
                             ease: "linear",
+                            delay: path.delay,
                         }}
                     />
                 ))}
