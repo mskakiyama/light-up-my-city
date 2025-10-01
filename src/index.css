@@ -40,9 +40,9 @@ All colors MUST be HSL.
     --radius: 1rem;
 
     /* Waze-style Traffic Colors */
-    --traffic-red: 0 85% 65%;
-    --traffic-yellow: 45 100% 65%;
-    --traffic-green: 140 85% 55%;
+    --traffic-red: 339 99% 52%;
+    --traffic-yellow: 62 99% 52%;
+    --traffic-green: 107 99% 52%;
     --traffic-off: 215 15% 35%;
 
     /* Navigation-style Map Colors */
@@ -96,9 +96,9 @@ All colors MUST be HSL.
     --ring: 120 100% 50%;
 
     /* Traffic Light System Colors - same for dark */
-    --traffic-red: 0 75% 55%;
-    --traffic-yellow: 45 100% 55%;
-    --traffic-green: 120 100% 50%;
+    --traffic-red: 339 99% 52%;
+    --traffic-yellow: 62 99% 52%;
+    --traffic-green: 107 99% 52%;
     --traffic-off: 220 15% 25%;
 
     --sidebar-background: 240 5.9% 10%;
