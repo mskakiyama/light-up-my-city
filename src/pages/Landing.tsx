@@ -151,7 +151,7 @@ const Landing = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-white/15 via-white/3 to-transparent rounded-lg pointer-events-none" />
             <div className="absolute inset-0 bg-gradient-to-tl from-primary/3 via-transparent to-transparent rounded-lg pointer-events-none" />
             
-            <Card className="backdrop-blur-3xl bg-[#0B0D0F]/90 border border-white/25 shadow-[0_8px_32px_0_rgba(0,0,0,0.5),0_0_1px_0_rgba(255,255,255,0.2)_inset] relative overflow-hidden">
+            <Card className="backdrop-blur-3xl bg-[#0B0D0F]/90 shadow-[0_8px_32px_0_rgba(0,0,0,0.5),0_0_1px_0_rgba(255,255,255,0.2)_inset] relative overflow-hidden">
               <CardHeader className="space-y-1 text-center relative z-10">
               <CardTitle className="text-3xl font-bold tracking-tight">
                 Light up my city
