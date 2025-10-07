@@ -153,8 +153,8 @@ const Landing = () => {
             
             <Card className="backdrop-blur-xl bg-[#0B0D0F]/50 shadow-[0_8px_32px_0_rgba(0,0,0,0.5),0_0_1px_0_rgba(255,255,255,0.2)_inset] relative overflow-hidden">
               <CardHeader className="space-y-1 text-center relative z-10">
-              <CardTitle className="text-5xl font-bold tracking-tight font-jura leading-tight">
-                Light up<br />my city
+              <CardTitle className="text-3xl font-bold tracking-tight font-jura">
+                Light up my city
               </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4 relative z-10">
