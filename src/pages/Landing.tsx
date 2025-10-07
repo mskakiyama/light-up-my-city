@@ -156,9 +156,6 @@ const Landing = () => {
               <CardTitle className="text-5xl font-bold tracking-tight font-jura leading-tight">
                 Light up<br />my city
               </CardTitle>
-              <CardDescription>
-                {isSignUp ? "Create an account to get started" : "Sign in to your account"}
-              </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4 relative z-10">
               <form onSubmit={handleAuth} className="space-y-4">
