@@ -133,7 +133,7 @@ const Landing = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-background">
+    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#0E1219]">
       <div className="absolute inset-0">
         <FloatingPaths position={1} />
         <FloatingPaths position={-1} />
